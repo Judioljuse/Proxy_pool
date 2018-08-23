@@ -14,7 +14,7 @@
 ## 单机部署
 
 ### 服务端
-- 安装Redis。有问题可以阅读[这篇文章](http://www.runoob.com/redis/redis-install.html)的相关部分。
+- 安装Redis。 有问题可以阅读[这篇文章](http://www.runoob.com/redis/redis-install.html)的相关部分。
 - 根据Redis的实际配置修改项目配置文件[config.py](config.py)中的`REDIS_HOST`、`REDIS_PASSWORD`等参数。
 - 安装[flask](http://flask.pocoo.org/)
 
