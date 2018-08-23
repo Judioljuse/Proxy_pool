@@ -1,4 +1,4 @@
-# # HAipproxy
+# HAipproxy
 [中文文档](README.md) | [README](README_EN.md)
 
 This project crawls proxy ip resources from the Internet.What we wish is to provide a 
@@ -15,7 +15,7 @@ spiders.
 
 # Quick start
 
-Please go to [release](https://github.com/SpiderClub/haipproxy/releases) to download the source code,
+Please go to [release](https://github.com/Judioljuse/Proxy_pool/) to download the source code,
 the master is unstable.
 
 ## Standalone
@@ -73,40 +73,6 @@ print(fetcher.get_proxies()) # or print(fetcher.pool)
   print(resp.text)
   ```
 
-## Dockerize
-- Install Docker
-
-- Install docker-compose
-  > pip install -U docker-compose
-
-- Change`SPLASH_URL`and`REDIS_HOST`in [settings.py](config/settings.py)
-  ```python3
-  SPLASH_URL = 'http://splash:8050'
-  REDIS_HOST = 'redis'
-  ```
-- Start all the containers using docker-compose
-  > docker-compose up
-
-- Use [py_cli](client/py_cli.py) or Squid to get available proxy ips.
-  ```python3
-  from client.py_cli import ProxyFetcher
-  args = dict(host='127.0.0.1', port=6379, password='123456', db=0)
-  fetcher = ProxyFetcher('https', strategy='greedy', length=5, redis_args=args)
-  print(fetcher.get_proxy())
-  print(fetcher.get_proxies()) # or print(fetcher.pool)
-  ```
-
-or 
-
-```python3
-import requests
-proxies = {'https': 'http://127.0.0.1:3128'}
-resp = requests.get('https://httpbin.org/ip', proxies=proxies)
-print(resp.text)
-```
-
-# WorkFlow
-![](static/workflow.png)
 
 # Other important things
 - This project is highly dependent on redis,if you want to replace redis with another mq or database,
@@ -140,14 +106,6 @@ Thanks to all the contributors of the following projects.
 [proxyspider](https://github.com/zhangchenchen/proxyspider)
 
 [ProxyPool](https://github.com/henson/ProxyPool)
-
-[proxy_pool](https://github.com/jhao104/proxy_pool)
-
-[ProxyPool](https://github.com/WiseDoge/ProxyPool)
-
-[IPProxyTool](https://github.com/awolfly9/IPProxyTool)
-
-[IPProxyPool](https://github.com/qiyeboy/IPProxyPool)
 
 [proxy_list](https://github.com/gavin66/proxy_list)
 
