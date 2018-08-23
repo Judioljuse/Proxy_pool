@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+#header {
+	background-color:black;
+	color:white;
+	text-align:center;
+	padding:5px;
+}
+#nav {
+	line-height:30px;
+	background-color:#eeeeee;
+	height:300px;
+	width:100px;
+	float:left;
+	padding:5px; 
+}
+#section_1 {
+	width:600px;
+	float:left;
+	padding:10px; 
+}
+#section_2{
+	width:400px;
+	float:left;
+	padding:10px; 
+}
+#section_header {
+	color:black;
+	text-align:center;
+	padding:5px;
+}
+#footer {
+	background-color:black;
+	color:white;
+	clear:both;
+	text-align:center;
+	padding:5px; 
+}
+
+</style>
+
+<body>
+
+	<div id="header">
+		<h1>Proxy Pool</h1>
+	</div>
+
+	<div id="nav">
+		&nbsp;<br>
+		&nbsp;<br>
+		点击<br>
+		左侧<br>
+		代理<br>
+		显示详细信息<br>
+	</div>
+
+	<div id="section_header">
+		<h3 align="right"> Current date/time: {{ current_time | datetimefilter }}</h3>
+	</div>
+	<div id="section_1">
+
+		<P align="right">代理 ： &nbsp; &nbsp; 分数</P>
+		{% for proxy in IP_PORT %}
+		<p align="right"><a href="{{ url_for('proxrpool_list_',q=proxy)}}">{{proxy}}</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<a> {{IP_PORT[proxy]}}</a></p>
+		<!-- <p align="right"><a onclick="myFunction()">{{proxy}}</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<a> {{IP_PORT[proxy]}}</a></p> -->
+		{% endfor %}
+
+	</div>
+	<div id="section_2">
+
+ {% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+    <div class=flashes>
+    {% for category, message in messages %}
+      <p class="alert alert-{{ category }}" escape="false" align="left">{{ message | safe }}</p>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+	</div>
+
+	<div id="footer">
+		Copyright zhengzong
+
+	</div>
+
+</body>
+
+{% endblock %}
