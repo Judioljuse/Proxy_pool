@@ -7,6 +7,7 @@
 {% endblock %}
 
 
+
 {% block content %}
 <h3>施工中...</h3>
 <div>
@@ -47,8 +48,8 @@
 		<!-- /.box -->
 
 	</section>
-	<a class="btn btn-app" href="{{ url_for('return_douban',q='1')}}">
-		<i class="fa fa-play"></i> 运行
+	<a class="btn btn-app" id='btn'>
+		<i class="fa fa-play" >运行</i> 
 	</a>
 	<div class="col-md-9">
 		<div class="box box-primary">
@@ -58,36 +59,25 @@
 			<!-- /.box-header -->
 			<div class="box-body">
 				<div class="form-group">
-					<input class="form-control" placeholder="To:">
+					<input class="form-control" placeholder="serverStatus:" id='serverStatus'>
 				</div>
 
-				<div class="form-group" style="overflow-Y:scroll;height: 300px ">
-						{% with messages = get_flashed_messages() %}
-						{% if messages %}
-						<div class=flashes>
-							{% for message in messages %}
-							<p escape="false" >{{ message | safe }}</p>
-							{% endfor %}
-						</div>
-						{% endif %}
-						{% endwith %}
+				<div class="form-group" style="overflow-Y:scroll;height: 300px " id='serverData'>
+
 
 				</div>
-				<div class="form-group">
-					<div class="btn btn-default btn-file">
-						<i class="fa fa-paperclip"></i> Attachment
-						<input type="file" name="attachment">
-					</div>
-					<p class="help-block">Max. 32MB</p>
-				</div>
+				
 			</div>
 			<!-- /.box-body -->
 			<div class="box-footer">
 				<div class="pull-right">
-					<button type="button" class="btn btn-default"><i class="fa fa-pencil"></i> Draft</button>
-					<button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send</button>
-				</div>
-				<button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Discard</button>
+
+				</div >
+				<a href="{{ url_for('download_file',filename='Douban.json')}}">
+				<button type="button" class="btn btn-primary" >
+					<i class="fa fa-cloud-download" ></i> Download
+				</button>
+				</a>
 			</div>
 			<!-- /.box-footer -->
 		</div>

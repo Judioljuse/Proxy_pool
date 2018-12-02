@@ -1,0 +1,19 @@
+<script>
+	window.onload=function(){
+		var btn = document.getElementById("btn");
+		var isGo = false;  //开始停止的标志
+
+btn.onclick = function(){
+
+	if(isGo) {
+		btn.innerHTML="开始";
+	} else {
+		btn.innerHTML="停止";
+	}
+
+	isGo = !isGo;  //按钮冲突改变
+	};
+}
+</script>
+
+<button id="btn">开始</button>

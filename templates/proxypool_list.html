@@ -3,7 +3,7 @@
 
 <style>
 #header {
-	background-color:black;
+	background-color:#222d32;
 	color:white;
 	text-align:center;
 	padding:5px;
@@ -12,17 +12,17 @@
 	line-height:30px;
 	background-color:#eeeeee;
 	height:300px;
-	width:100px;
+	width:8%;
 	float:left;
 	padding:5px; 
 }
 #section_1 {
-	width:600px;
+	width:92%;
 	float:left;
 	padding:10px; 
 }
 #section_2{
-	width:400px;
+	width:20%;
 	float:left;
 	padding:10px; 
 }
@@ -44,48 +44,136 @@
 <body>
 
 	<div id="header">
-		<h1>Proxy Pool</h1>
+		<span class="logo-lg"><b>Proxy Pool</b></span>
+			<div class="user-panel">
+				<h4> {{ current_time | datetimefilter }}</h4>
+			</div>
 	</div>
 
 	<div id="nav">
-		&nbsp;<br>
-		&nbsp;<br>
-		点击<br>
-		左侧<br>
-		代理<br>
-		显示详细信息<br>
-	</div>
+		<div class="small-box bg-green">
+            <div class="inner" style="height: 250px">
+              <h3>点击<sup style="font-size: 12px"></sup></h3>
 
-	<div id="section_header">
-		<h3 align="right"> Current date/time: {{ current_time | datetimefilter }}</h3>
+              <p>左侧 代理</p>
+              <p>显示 详细信息</p>
+            </div>
+            <div class="icon" style="top:48%;">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" class="small-box-footer">
+              More info <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
 	</div>
 	<div id="section_1">
+      <div class="row">
+        <div class="col-md-9">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Bordered Table</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table class="table table-bordered">
+                <tr>
+                  <th style="width: 10px">#</th>
+                  <th>代理</th>
+                  <th>可用度</th>
+                  <th>分数</th>
+                  {% for i,(proxy,score) in IP_PORT %}
 
-		<P align="right">代理 ： &nbsp; &nbsp; 分数</P>
-		{% for proxy in IP_PORT %}
-		<p align="right"><a href="{{ url_for('proxrpool_list_',q=proxy)}}">{{proxy}}</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<a> {{IP_PORT[proxy]}}</a></p>
-		<!-- <p align="right"><a onclick="myFunction()">{{proxy}}</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<a> {{IP_PORT[proxy]}}</a></p> -->
-		{% endfor %}
 
-	</div>
-	<div id="section_2">
+                </tr>
+                <tr>
+                  <td>{{i}}.</td>
+                  <td><a href="{{ url_for('proxrpool_list_',q=proxy)}}">{{proxy}}</a></td>
+                  <td>
+                    <div class="progress progress-xs progress-striped active">
+                  		{% if score>95 %} 
+                      <div class="progress-bar progress-bar-success" style="width: {{score}}%"></div>
+                    </div>
+                  </td>
+                  <td><span class="badge bg-green"><a><font color="white"> {{score}}</font></a></span></td>
+                  		{% endif %}
 
- {% with messages = get_flashed_messages(with_categories=True) %}
-  {% if messages %}
-    <div class=flashes>
-    {% for category, message in messages %}
-      <p class="alert alert-{{ category }}" escape="false" align="left">{{ message | safe }}</p>
-    {% endfor %}
+                  		{% if 95>=score>75 %} 
+                      <div class="progress-bar progress-bar-primary" style="width: {{score}}%"></div>
+                    </div>
+                  </td>
+                  <td><span class="badge bg-light-blue"><a><font color="white"> {{score}}</font></a></span></td>
+                  		{% endif %}
+
+                  		{% if 75>=score>50 %} 
+                      <div class="progress-bar progress-bar-yellow" style="width: {{score}}%"></div>
+                    </div>
+                  </td>
+                  <td><span class="badge bg-yellow"><a><font color="white"> {{score}}</font></a></span></td>
+                  		{% endif %}
+
+                  		{% if 50>=score %} 
+                      <div class="progress-bar progress-bar-danger" style="width: {{score}}%"></div>
+                    </div>
+                  </td>
+                  <td><span class="badge bg-red"><a><font color="white"> {{score}}</font></a></span></td>
+                  		{% endif %}
+                </tr>
+
+				{% endfor %}
+
+              </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+              <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="#">&laquo;</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">&raquo;</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- /.box -->
+        </div>
+        <div id="section_2">
+        	<div class="box box-success">
+            	<div class="box-header with-border">
+              		<h3 class="box-title">代理详细信息</h3>
+
+             	 	<div class="box-tools pull-right">
+                	<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              		</div>
+              <!-- /.box-tools -->
+            	</div>
+            <!-- /.box-header -->
+            	<div class="box-body">
+              The IP info
+            	</div>
+            <!-- /.box-body -->
+          </div>
+
+		 {% with messages = get_flashed_messages(with_categories=True) %}
+		  {% if messages %}
+		    <div class=flashes>
+		    {% for category, message in messages %}
+		      <p class="alert alert-{{ category }}" escape="false" align="left">{{ message | safe }}</p>
+		    {% endfor %}
+		    </div>
+		  {% endif %}
+		{% endwith %}
+		</div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
     </div>
-  {% endif %}
-{% endwith %}
 
-	</div>
 
-	<div id="footer">
-		Copyright zhengzong
 
-	</div>
+
+
 
 </body>
 

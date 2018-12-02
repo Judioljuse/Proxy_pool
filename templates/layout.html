@@ -37,25 +37,64 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   {% from "macros.html" import link with context %}
   <script>
-function myFunction()
-{ var e = window.event;
-  obj = e.target || e.srcElement;
-  console.log(e);
-  //var div_str = document.getElementById('one_proxy').innerHTML;
+window.onload=function(){
+  var serverData;
+  var serverStatus;
+  var url = 'http://127.0.0.1:5000/douban_stream/' //服务端地址
 
-  var div_str = e.target.innerText;
-  document.getElementById("section_2").innerHTML=div_str;
-  var data={"ip":div_str};
-  $.ajax({
-        type: 'POST',
-        url:"/proxypool_list",
-        data:JSON.stringify(data),  //转化字符串 
-        contentType: 'application/json; charset=UTF-8',
-        success:function(data){ //成功的话，得到消息
-        console.log(data);
-        window.location.href = data.url;}
-        });
+  var btn = document.getElementById("btn");
+  var isGo = false; 
+  var times = 1;
+
+  btn.onclick = function() {
+
+
+    if(!isGo) {
+      btn.innerHTML= "<i class='fa fa-pause' >暂停</i>";
+
+      serverData = document.getElementById('serverData');
+      serverStatus = document.getElementById('serverStatus');
+      startListenServer()
+
+
+
+    } 
+    else {
+
+      btn.innerHTML= "<i class='fa fa-play' >运行</i>";
+    }
+
+        
+    isGo = !isGo;  //按钮冲突改变
+    times +=1;
+    if (times>2) {
+      location.reload()
+    }
+
+  }
+
+  function startListenServer() {
+      serverStatus.innerHTML = "start connect server";
+      var es = new EventSource(url); //连接服务器
+      es.onopen = open;
+      es.onerror = error;
+      es.onmessage = msg;} 
+
+
+  function open(e) {
+      serverStatus.innerHTML = "server open";
+  }
+
+  function error(e) {
+      serverStatus.innerHTML = "server error";
+  }
+
+  function msg(e) {
+      serverData.innerHTML += "<p>"+e.data+"<p>" ; // e.data即服务器返回的数据
+      var div = document.getElementById('serverData')
+      div.scrollTop = div.scrollHeight;}
 }
+
 </script>
 </head>
 <!--
@@ -89,7 +128,7 @@ desired effect
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Spier</b> Integration</span>
+      <span class="logo-lg"><b>Spider</b> Integration</span>
     </a>
 
     <!-- Header Navbar -->
@@ -104,50 +143,7 @@ desired effect
           <!-- Messages: style can be found in dropdown.less-->
 
           <!-- User Account Menu -->
-          <li class="dropdown user user-menu">
-            <!-- Menu Toggle Button -->
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <!-- The user image in the navbar-->
-              <img src="static/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">Alexander Pierce</span>
-            </a>
-            <ul class="dropdown-menu">
-              <!-- The user image in the menu -->
-              <li class="user-header">
-                <img src="static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
-                <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
-                </p>
-              </li>
-              <!-- Menu Body -->
-              <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>
-                <!-- /.row -->
-              </li>
-              <!-- Menu Footer-->
-              <li class="user-footer">
-                <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                </div>
-                <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                </div>
-              </li>
-            </ul>
-          </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
             <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
@@ -165,12 +161,12 @@ desired effect
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="static/dist/img/zhengzong.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Alexander Pierce</p>
+          <p>Zheng zong</p>
           <!-- Status -->
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="#"><i class="fa fa-circle text-success"></i> root</a>
         </div>
       </div>
 
@@ -190,8 +186,9 @@ desired effect
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>首页</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>使用说明</span></a></li>
+
+        <!-- <li class="active"><a href="#"><i class="fa fa-link"></i> <span>首页</span></a></li> -->
+        <!-- <li><a href="#"><i class="fa fa-link"></i> <span>使用说明</span></a></li> -->
 
         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>代理池项目</span>
@@ -207,7 +204,7 @@ desired effect
           </ul>
         </li>
 
-        <li class="treeview">
+<!--         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>豆瓣</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
@@ -218,9 +215,9 @@ desired effect
             {{ link('douban', '运行爬虫') }}
             <li><a href="#">项目代码</a></li>
           </ul>
-        </li>
+        </li> -->
 
-        <li class="treeview">
+<!--         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>twitter</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
@@ -231,9 +228,9 @@ desired effect
             <li><a href="#">数据展示</a></li>
             <li><a href="#">项目代码</a></li>
           </ul>
-        </li>
+        </li> -->
 
-        <li class="treeview">
+<!--         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
@@ -243,7 +240,7 @@ desired effect
             <li><a href="#">Link in level 2</a></li>
             <li><a href="#">Link in level 2</a></li>
           </ul>
-        </li>
+        </li> -->
       </ul>
       <!-- /.sidebar-menu -->
     </section>
@@ -255,7 +252,7 @@ desired effect
     <!-- Content Header (Page header) -->
     <section class="content-header">
       {% block instruction %}{% endblock %}
-      <h1 align="center">
+      <h1>
       {% block content %}{% endblock %}
         <small>Optional description</small>
       </h1>
@@ -266,13 +263,7 @@ desired effect
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid">
 
-      <!--------------------------
-        | Your Page Content Here |
-        -------------------------->
-
-    </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
@@ -284,7 +275,7 @@ desired effect
       Anything you want
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2016 <a href="#">Company</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2016 <a href="#">zheng zong</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->
