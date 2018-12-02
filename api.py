@@ -5,17 +5,18 @@ Created on Mon Aug 13 11:06:54 2018
 @author: 郑宗
 """
 
-from flask import Flask,g,render_template,request,url_for,jsonify,flash,redirect
+from flask import Flask,g,render_template,request,url_for,jsonify,flash,redirect,Response
+from flask_cors import CORS
 from db import RedisClient
 from Getter import  getCountry,find
 
 import datetime
-
+import os
 
 __all__ = ['app']
 app = Flask(__name__)
 app.secret_key = 'some_secret'
-
+CORS(app)  #注意这里的CORS
 current_time = datetime.datetime.now()
 
 @app.template_filter()
@@ -104,10 +105,10 @@ def proxypool_list():
         resolve_proxy= request.get_json()['ip']
         print(resolve_proxy)
         render_template(
-        'proxypool_list.html',IP_PORT=IP_PORT,current_time=current_time,resolve_proxy=resolve_proxy) 
+        'proxypool_list.html',IP_PORT=enumerate(IP_PORT.items()),current_time=current_time,resolve_proxy=resolve_proxy) 
     
     return render_template(
-        'proxypool_list.html',IP_PORT=IP_PORT,current_time=current_time,resolve_proxy='None') 
+        'proxypool_list.html',IP_PORT=enumerate(IP_PORT.items()),current_time=current_time,resolve_proxy='None') 
 
     
 
@@ -130,21 +131,34 @@ def my_list(page):
 
 
 #############################################################
+import eventlet
+eventlet.monkey_patch()
+from other_spider.Douban_movie import _Crawler_ 
+
 @app.route('/douban')
 def douban():
     return render_template(
         'douban.html')
+def event():
+    for i in range(0,5):
+        print('data:%d \n\n' % i)
+        yield 'data:%d \n\n' % i
+        eventlet.sleep(1)
 
-from other_spider.Douban_movie import _Crawler_
-@app.route('/return_douban', methods=['POST','GET'])
-def return_douban():
-    try:
-        q = request.args.get('q')
-    except:q=0
-    if q!=0:
-        _Crawler_()
 
-    return redirect(url_for('douban'))
+@app.route('/douban_stream/', methods=['GET', 'POST'])
+def douban_stream():
+    
+    return Response(_Crawler_(), mimetype="text/event-stream") # 注意这里的响应类型
+
+
+from flask import send_file, send_from_directory
+@app.route("/download/<filename>", methods=['GET'])
+def download_file(filename):
+    filename = request.args.get("filename")
+    # 需要知道2个参数, 第1个参数是本地目录的path, 第2个参数是文件名(带扩展名)
+    directory = os.getcwd()  # 假设在当前目录
+    return send_from_directory(directory, filename, as_attachment=True)
 
 ############################################################################
 
